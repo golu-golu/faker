@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import unittest
 
-from faker import Factory
+from faker import Faker
 from .. import string_types
 
 
@@ -12,7 +12,7 @@ class TestJaJP(unittest.TestCase):
     """ Tests phone_number in the ja_JP locale """
 
     def setUp(self):
-        self.factory = Factory.create('ja')
+        self.factory = Faker('ja')
 
     def test_phone_number(self):
         pn = self.factory.phone_number()

@@ -6,7 +6,7 @@ from datetime import time as datetime_time
 import time
 import unittest
 
-from faker import Factory
+from faker import Faker
 from faker.generator import random
 from faker.providers.date_time import Provider as DatetimeProvider
 from .. import string_types
@@ -36,7 +36,7 @@ utc = UTC()
 class TestDateTime(unittest.TestCase):
 
     def setUp(self):
-        self.factory = Factory.create()
+        self.factory = Faker()
 
     def test_day(self):
         day = self.factory.day_of_week()
@@ -235,7 +235,7 @@ class TestDateTime(unittest.TestCase):
 class TestPlPL(unittest.TestCase):
 
     def setUp(self):
-        self.factory = Factory.create('pl_PL')
+        self.factory = Faker('pl_PL')
         self.provider = self.factory.provider('faker.providers.date_time')
 
     def test_day(self):

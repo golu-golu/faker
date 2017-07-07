@@ -3,17 +3,17 @@
 from __future__ import unicode_literals
 
 import re
-import unittest
 import string
-import six
 import sys
+import unittest
+import warnings
 
 try:
     from StringIO import StringIO
 except ImportError:  # pragma: no cover
     from io import StringIO
 
-from faker import Generator, Factory
+from faker import Generator, Faker
 from faker.generator import random
 from faker.utils import text, decorators
 from . import string_types
@@ -40,6 +40,26 @@ class FactoryTestCase(unittest.TestCase):
         self.generator = Generator()
         self.provider = FooProvider()
         self.generator.add_provider(self.provider)
+
+    def test_pending_deprecation(self):
+        from faker.factory import Factory
+
+        with warnings.catch_warnings(record=True) as warning:
+            # Cause all warnings to always be triggered.
+            warnings.simplefilter("always")
+            # Trigger a warning.
+            Factory.create()
+
+            self.assertEqual(len(warning), 1)
+            self.assertTrue(issubclass(warning[-1].category, PendingDeprecationWarning))
+
+        with warnings.catch_warnings(record=True) as w:
+            # Cause all warnings to always be triggered.
+            warnings.simplefilter("always")
+            # Trigger a warning.
+            Faker()
+
+            self.assertEqual(len(w), 0)
 
     def test_add_provider_gives_priority_to_newly_added_provider(self):
         self.generator.add_provider(BarProvider())
@@ -222,7 +242,7 @@ class FactoryTestCase(unittest.TestCase):
     def test_prefix_suffix_always_string(self):
         # Locales known to contain `*_male` and `*_female`.
         for locale in ("bg_BG", "dk_DK", "en", "ru_RU", "tr_TR"):
-            f = Factory.create(locale=locale)
+            f = Faker(locale=locale)
             for x in range(20):  # Probabilistic testing.
                 assert isinstance(f.prefix(), string_types)
                 assert isinstance(f.suffix(), string_types)
@@ -236,7 +256,7 @@ class FactoryTestCase(unittest.TestCase):
         self.assertEqual(paragraph, '')
 
     def test_words_valueerror(self):
-        f = Factory.create()
+        f = Faker()
         self.assertRaises(ValueError, f.text, max_nb_chars=4)
 
     def test_no_words_paragraph(self):
@@ -248,18 +268,17 @@ class FactoryTestCase(unittest.TestCase):
         self.assertEqual(sentence, '')
 
     def test_ext_word_list(self):
-        from faker import Factory
-        fake = Factory.create()
+        fake = Faker()
 
         my_word_list = [
-        'danish',
-        'cheesecake',
-        'sugar',
-        'Lollipop',
-        'wafer',
-        'Gummies',
-        'Jelly',
-        'pie',
+            'danish',
+            'cheesecake',
+            'sugar',
+            'Lollipop',
+            'wafer',
+            'Gummies',
+            'Jelly',
+            'pie',
         ]
         word = fake.word(ext_word_list=my_word_list)
         self.assertIn(word, my_word_list)
@@ -335,7 +354,7 @@ class FactoryTestCase(unittest.TestCase):
     def test_email(self):
         from faker import Factory
 
-        factory = Factory.create()
+        factory = Faker()
 
         for _ in range(999):
             email = factory.email()

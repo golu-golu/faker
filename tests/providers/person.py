@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import unittest
 
-from faker import Factory
+from faker import Faker
 from faker.providers.person.ne_NP import Provider as NeProvider
 from faker.providers.person.sv_SE import Provider as SvSEProvider
 from .. import string_types
@@ -14,7 +14,7 @@ class TestJaJP(unittest.TestCase):
     """ Tests person in the ja_JP locale """
 
     def setUp(self):
-        self.factory = Factory.create('ja')
+        self.factory = Faker('ja')
 
     def test_person(self):
         name = self.factory.name()
@@ -73,7 +73,7 @@ class TestJaJP(unittest.TestCase):
 class TestNeNP(unittest.TestCase):
 
     def setUp(self):
-        self.factory = Factory.create('ne_NP')
+        self.factory = Faker('ne_NP')
 
     def test_names(self):
         name = self.factory.name().split()
@@ -90,7 +90,7 @@ class TestNeNP(unittest.TestCase):
 class TestSvSE(unittest.TestCase):
 
     def setUp(self):
-        self.factory = Factory.create('sv_SE')
+        self.factory = Faker('sv_SE')
 
     def test_gender_first_names(self):
         """simple test to verify that we are pulling gender specific names"""
